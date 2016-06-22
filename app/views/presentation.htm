@@ -1,0 +1,87 @@
+<html>
+<head>
+<title><?php echo $pagetitle; ?></title>
+<meta charset="UTF-8">
+<link rel="stylesheet" media="all" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="./ui/css/app.css">
+<script src="http://code.jquery.com/jquery-3.0.0.min.js"</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+var current  = 1;
+
+function changePageNumber(){
+  $(".slide-show").css('background-image', 'url(<?php echo $bkg_url; ?>'+'?page='+ current +'&q=100&fit=max' +')');
+}
+
+$(document).ready(function(){
+
+//Check if user is logged
+  function statusChangeCallback(response) {
+    if (response.status === 'connected') {
+      changePageNumber();
+      $(".next").click(function() {
+        if (current+1 < 10) {
+        current += 1;
+        changePageNumber();
+      }
+    });
+      $(".previous").click(function() {
+        if (current-1 > 0) {
+          current -= 1;
+          changePageNumber();
+        }
+      });
+    } else if (response.status === 'not_authorized') {
+      window.location.replace("./login");
+    } else {
+      window.location.replace("./login");
+    }
+  }
+  function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  }
+
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '1607879209503042',
+    cookie     : true,  // enable cookies to allow the server to access
+                        // the session
+    xfbml      : true,  // parse social plugins on this page
+    version    : 'v2.5' // use graph api version 2.5
+  });
+
+
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+
+  };
+
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+});
+
+</script>
+</head>
+<body>
+<h1><?php echo $pagetitle; ?></h1>
+
+<!-- display slideshow -->
+
+<div class="slide-show-container">
+  <div class="glyphicon glyphicon-menu-left previous"></div>
+  <div class="slide-show"></div>
+  <div class="glyphicon glyphicon-menu-right next" ></div>
+<div>
+
+
+</body>
+</html>
